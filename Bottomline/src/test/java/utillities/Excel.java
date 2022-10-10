@@ -37,6 +37,9 @@ public class Excel {
 
 		System.out.println("Data from Excel is " + data0);
 
+		
+	
+		
 		WebDriver driver = new EdgeDriver();
 		driver.manage().window().maximize();
 		driver.get(data0);

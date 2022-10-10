@@ -1,87 +1,50 @@
 package TestNG;
 
-import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Properties;
 
-import dev.failsafe.internal.util.Assert;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.testng.annotations.AfterClass;
-
+import org.testng.annotations.Test;
 
 public class NewTest {
-	
-  WebDriver driver;
-  @Test
-  public void valid() {
-	  
-	  
-	     driver.findElement(By.className("register-btn")).click();
-		 driver.findElement(By.id("email")).sendKeys("dsatish240@gmail.com");
-		 driver.findElement(By.id("password")).sendKeys("9886529299");
+
+	WebDriver driver;
+
+	@Test
+	public void TestConfig() throws Exception
+	{
+		// to access property file
+		File src= new File("./congiguration/config.property");
+		FileInputStream fis = new FileInputStream(src);
 		
-		 driver.findElement(By.xpath("//input[@type = 'submit']")).click();
-  
-  }
-  
-  
-  @Test
-  public void VerifyHomePageTitle() {
-	  
-	  
-	      String ExpectedTitle = " ";
-	      
-	      String ActualTitle = driver.getTitle();
-	      
-	      try {
-	    	  
-	    	  org.testng.Assert.assertEquals(ActualTitle, ExpectedTitle);
-	    	  
-	    	  System.out.println("test case passed");
-			
-		} catch (Exception e) {
-			
-			System.out.println("test case failed");
-			
-		}
-  
-  }
-  
-  
-  
-  
-  @BeforeMethod
-  public void beforeMethod() {
-	  
-	  System.setProperty("webdriver.edge.driver","C:\\Users\\satish.devaguptapu\\OneDrive - Bottomline\\Documents\\Trainng\\Edge\\msedgedriver.exe");
-		driver=new EdgeDriver();
-		driver.manage().window().maximize();
-		driver.get("https://www.rahulshettyacademy.com/");
-	  
-  }
+		//to read the property file create an object of properties class
+		Properties pro= new Properties();
+		
+		//to load property file
+		pro.load(fis);
+		
+		// to fetch the key value from property file
+		String str= pro.getProperty("edgedriver");
+		System.out.println(str);
+		String url= pro.getProperty("url");
 
-  @AfterMethod
-  public void afterMethod() {
-	  
-	  driver.close();
-	 
-  }
+		System.setProperty("webdriver.chrome.driver",str);			
+		WebDriver driver = new EdgeDriver();
+		driver.get(url);
 
-  @BeforeClass
-  public void beforeClass() {
-	  
-	 
-  }
 
-  @AfterClass
-  public void afterClass() {
-	  
-	  
-  }
+		driver.findElement(By.className("register-btn")).click();
+	
+		
+		driver.findElement(By.id("email")).sendKeys(pro.getProperty("username"));
+		driver.findElement(By.id("password")).sendKeys(pro.getProperty("password"));
+		
+		driver.findElement(By.xpath("//input[@type = 'submit']")).click();
+
+	}
 
 }
+
